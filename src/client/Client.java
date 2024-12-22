@@ -28,6 +28,35 @@ public class Client {
         }
     }
 
+    public void scanPeers(String subnet) {
+        System.out.println("Scanning available devices ...");
+        try {
+            for (int i = 0; i < 255; i++) {
+                String host = subnet + "." + i;
+                if (isReachable(host)) {
+                    System.out.println(host);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isReachable(String peer) throws IOException {
+        InetAddress host = InetAddress.getByName(peer);
+        boolean reachable = false;
+
+        try (
+            Socket soc = new Socket(host, PORT);
+            PrintWriter sendData = new PrintWriter(soc.getOutputStream(), true);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+        ) {
+            reachable = true;
+        }
+
+        return reachable;
+    }
+
     public static void main(String[] args) throws IOException {
         Client client = new Client();
         client.run();
