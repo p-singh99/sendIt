@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import common.PeerRequest;
+
 public class Server {
 
     static int SERVER_PORT = 8080;
@@ -21,11 +23,17 @@ public class Server {
             ) {
                 String clientMessage;
                 while ((clientMessage = clientReader.readLine()) != null) {
+                    switch (clientMessage) {
+                        case PeerRequest.HELLO:
+                            System.out.println("Hello!");
+                            clientWriter.println(PeerRequest.HELLO);
+                            break;
+                    }
                     System.out.println(clientMessage);
                     clientWriter.println("Message received!");
                 }
 
-                break;
+//                break;
             } catch (IOException e) {
                 System.out.println("I/O error occurred: Client closed the connection");
                 break;

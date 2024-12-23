@@ -1,11 +1,15 @@
 package client;
 
+import common.PeerRequest;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Client {
@@ -13,7 +17,7 @@ public class Client {
     static int PORT = 8080;
 
     public void run() throws IOException {
-        InetAddress host = InetAddress.getByName("localhost");
+        InetAddress host = InetAddress.getByName("192.168.0.134");
 
         try (
             Socket soc = new Socket(host, PORT);
@@ -30,15 +34,15 @@ public class Client {
 
     public void scanPeers(String subnet) {
         System.out.println("Scanning available devices ...");
-        try {
-            for (int i = 0; i < 255; i++) {
-                String host = subnet + "." + i;
+        for (int i = 0; i < 255; i++) {
+            String host = subnet + "." + i;
+            try {
                 if (isReachable(host)) {
                     System.out.println(host);
                 }
+            } catch (Exception e) {
+
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -47,11 +51,15 @@ public class Client {
         boolean reachable = false;
 
         try (
-            Socket soc = new Socket(host, PORT);
+                final Socket soc = new Socket();
+        ) {
+            soc.connect(new InetSocketAddress(host, PORT), 100);
             PrintWriter sendData = new PrintWriter(soc.getOutputStream(), true);
             BufferedReader reader = new BufferedReader(new InputStreamReader(soc.getInputStream()));
-        ) {
-            reachable = true;
+
+            sendData.println(PeerRequest.HELLO);
+            String hostResponse = reader.readLine();
+            reachable = hostResponse.equals(PeerRequest.HELLO);
         }
 
         return reachable;
