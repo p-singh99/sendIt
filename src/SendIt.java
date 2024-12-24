@@ -1,38 +1,34 @@
 import client.Client;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.Enumeration;
+import java.util.Scanner;
+
+import common.constants.Command;
 
 class Main {
-    public static void main(String[] args) throws UnknownHostException, SocketException {
-        String hostName = InetAddress.getLocalHost().getHostName();
-//        System.out.println("Hostname: " + hostName);
-//        System.out.println("IP: " + InetAddress.getByName(hostName).getHostAddress());
-//        System.out.println("IP: " + InetAddress.getByName("Pawanjots-MacBook-Pro").getHostAddress());
-        //        System.out.println(InetAddress.getLocalHost().getHostAddress());
-//        System.out.println("App running...");
-//        Client client = new Client();
-//        client.scanPeers("192.168.0");
-//        client.scanPeers("127.0.0");
+    public static void main(String[] args) {
+        Client client = new Client();
 
-        Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
-        while (networkInterfaces.hasMoreElements()) {
-            NetworkInterface networkInterface = networkInterfaces.nextElement();
-//            System.out.println("Interface: " + networkInterface.getDisplayName());
-            if (!networkInterface.isUp()) continue;
-            if (networkInterface.isLoopback()) continue;
+        // Main loop - get user input and run accordingly
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            String userInput = sc.nextLine();
+            String command = userInput.split(" ")[0];
 
-            Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
-            while (addresses.hasMoreElements()) {
-                InetAddress address = addresses.nextElement();
-                if (address.isLinkLocalAddress()) {
-                    continue;
+            switch (command.toLowerCase()) {
+                case Command.SCAN -> client.scanPeers();
+                case Command.CONNECT -> {
+                    if (userInput.split(" ").length > 1) {
+                        System.out.println("Connecting to IP: " + userInput.split(" ")[1]);
+                    } else {
+                        System.err.println("No IP address provided");
+                    }
                 }
-                if (address.isSiteLocalAddress()) {
-                    System.out.println("IP: " + address.getHostAddress());
+                case Command.EXIT -> {
+                    System.out.println("Exiting");
+                    return;
+                }
+                default -> {
+                    System.out.println("Unknown command: " + userInput);
                 }
             }
         }
