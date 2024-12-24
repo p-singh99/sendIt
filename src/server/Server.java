@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -27,6 +28,7 @@ public class Server {
                         case PeerRequest.HELLO:
                             System.out.println("Hello!");
                             clientWriter.println(PeerRequest.HELLO);
+                            clientWriter.println(InetAddress.getLocalHost().getHostName());
                             break;
                     }
                     System.out.println(clientMessage);

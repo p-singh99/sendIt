@@ -43,9 +43,7 @@ public class Client {
             String host = subnet + "." + i;
             if (!localAddress.contains(host)) {
                 try {
-                    if (isReachable(host)) {
-                        System.out.println(host);
-                    }
+                    isReachable(host);
                 } catch (Exception e) {
 
                 }
@@ -55,7 +53,7 @@ public class Client {
         System.out.println("Scan complete");
     }
 
-    private boolean isReachable(String peer) throws IOException {
+    private void isReachable(String peer) throws IOException {
         InetAddress host = InetAddress.getByName(peer);
         boolean reachable = false;
 
@@ -69,8 +67,8 @@ public class Client {
             sendData.println(PeerRequest.HELLO);
             String hostResponse = reader.readLine();
             reachable = hostResponse.equals(PeerRequest.HELLO);
-        }
 
-        return reachable;
+            if (reachable) System.out.println(reader.readLine() + " @ " + peer);
+        }
     }
 }
