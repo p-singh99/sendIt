@@ -20,7 +20,7 @@ public class Network {
             while (networkInterfaces.hasMoreElements()) {
                 NetworkInterface networkInterface = networkInterfaces.nextElement();
                 if (!networkInterface.isUp()) continue;
-                if (networkInterface.isLoopback()) continue;
+//                if (networkInterface.isLoopback()) continue;
 
                 Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
                 while (addresses.hasMoreElements()) {

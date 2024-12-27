@@ -16,12 +16,11 @@ class Main {
 
             switch (command.toLowerCase()) {
                 case Command.SCAN -> client.scanPeers();
-                case Command.CONNECT -> {
-                    if (userInput.split(" ").length > 1) {
-                        System.out.println("Connecting to IP: " + userInput.split(" ")[1]);
-                    } else {
-                        System.err.println("No IP address provided");
-                    }
+                case Command.SEND -> {
+                    if (userInput.split(" ").length < 3)
+                        System.err.println("Usage: 'send" + " ${DESTINATION_IP} " + "${FILE}'");
+                    else
+                        client.sendFile(userInput.split(" ")[2], userInput.split(" ")[1]);
                 }
                 case Command.EXIT -> {
                     System.out.println("Exiting");
