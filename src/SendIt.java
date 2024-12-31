@@ -1,5 +1,3 @@
-import client.Client;
-
 import java.util.Scanner;
 
 import constants.Command;

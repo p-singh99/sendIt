@@ -38,19 +38,24 @@ public class PeerHandler implements Runnable {
                         writer.println(PeerRequest.OK);
                         byte[] data = new byte[length];
                         System.out.println("Location: " + hostManager.getDownloadPath());
-                        FileOutputStream fos = new FileOutputStream(hostManager.getDownloadPath() + file);
-                        BufferedOutputStream bos = new BufferedOutputStream(fos);
 
-                        int bytesRead = 0;
-                        int totalBytes = 0;
-                        while ((bytesRead = is.read(data, 0, length)) != -1) {
-                            bos.write(data, 0, bytesRead);
-                            totalBytes += bytesRead;
-                            if (totalBytes == length) break;
+                        try (
+                            FileOutputStream fos = new FileOutputStream(hostManager.getDownloadPath() + file);
+                            BufferedOutputStream bos = new BufferedOutputStream(fos);
+                        ) {
+                            int bytesRead = 0;
+                            int totalBytes = 0;
+                            while ((bytesRead = is.read(data, 0, length)) != -1) {
+                                bos.write(data, 0, bytesRead);
+                                totalBytes += bytesRead;
+                                if (totalBytes == length) break;
+                            }
+                            bos.flush();
+                            writer.println(PeerRequest.OK);
+                            System.out.println(file + " saved successfully!");
+                        } catch (Exception e) {
+                            System.err.println("Error creating " + file + ": " + e);
                         }
-                        bos.flush();
-                        writer.println(PeerRequest.OK);
-                        System.out.println(file + " saved successfully!");
                     }
 
                     case PeerRequest.DISCONNECT -> {
