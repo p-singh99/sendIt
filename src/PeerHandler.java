@@ -1,4 +1,65 @@
-package PACKAGE_NAME;
+import constants.PeerRequest;
+import utilities.hostManager.HostManager;
+import utilities.hostManager.HostManagerFactory;
 
-public class PeerHandler {
+import java.io.*;
+import java.net.Socket;
+
+public class PeerHandler implements Runnable {
+    private Socket socket;
+    private final HostManager hostManager;
+
+    public PeerHandler(Socket socket) {
+        this.socket = socket;
+        this.hostManager = new HostManagerFactory().create();
+    }
+
+    @Override
+    public void run() {
+        try (
+            PrintWriter writer = new PrintWriter(this.socket.getOutputStream(), true);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+            InputStream is = this.socket.getInputStream();
+        ) {
+            String message;
+            while ((message = reader.readLine()) != null) {
+                String request = message.split(" ")[0];
+                switch (request) {
+                    case PeerRequest.HELLO -> {
+                        writer.println(PeerRequest.HELLO);
+                        writer.println(hostManager.getHostName());
+                    }
+
+                    case PeerRequest.TRANSFER -> {
+                        String file = message.split(" ")[1];
+                        int length = Integer.parseInt(message.split(" ")[2]);
+                        System.out.println("Receiving file: " + file + "...");
+
+                        writer.println(PeerRequest.OK);
+                        byte[] data = new byte[length];
+                        System.out.println("Location: " + hostManager.getDownloadPath());
+                        FileOutputStream fos = new FileOutputStream(hostManager.getDownloadPath() + file);
+                        BufferedOutputStream bos = new BufferedOutputStream(fos);
+
+                        int bytesRead = 0;
+                        int totalBytes = 0;
+                        while ((bytesRead = is.read(data, 0, length)) != -1) {
+                            bos.write(data, 0, bytesRead);
+                            totalBytes += bytesRead;
+                            if (totalBytes == length) break;
+                        }
+                        bos.flush();
+                        writer.println(PeerRequest.OK);
+                        System.out.println(file + " saved successfully!");
+                    }
+
+                    case PeerRequest.DISCONNECT -> {
+                        return;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("I/O error occurred: " + e);
+        }
+    }
 }

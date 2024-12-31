@@ -1,4 +1,4 @@
-package common.utilities.hostManager;
+package utilities.hostManager;
 
 public class WinManager extends HostManager {
 

@@ -1,4 +1,4 @@
-package common.constants;
+package constants;
 
 public class PeerRequest {
     public static final String HELLO = "Hello";

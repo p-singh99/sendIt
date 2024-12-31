@@ -2,11 +2,12 @@ import client.Client;
 
 import java.util.Scanner;
 
-import common.constants.Command;
+import constants.Command;
 
 class Main {
     public static void main(String[] args) {
-        Client client = new Client();
+        Peer peer = new Peer();
+        peer.start();
 
         // Main loop - get user input and run accordingly
         Scanner sc = new Scanner(System.in);
@@ -15,12 +16,12 @@ class Main {
             String command = userInput.split(" ")[0];
 
             switch (command.toLowerCase()) {
-                case Command.SCAN -> client.scanPeers();
+                case Command.SCAN -> peer.scanPeers();
                 case Command.SEND -> {
                     if (userInput.split(" ").length < 3)
                         System.err.println("Usage: 'send" + " ${DESTINATION_IP} " + "${FILE}'");
                     else
-                        client.sendFile(userInput.split(" ")[2], userInput.split(" ")[1]);
+                        peer.sendFile(userInput.split(" ")[2], userInput.split(" ")[1]);
                 }
                 case Command.EXIT -> {
                     System.out.println("Exiting");

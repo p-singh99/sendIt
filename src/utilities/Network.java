@@ -1,4 +1,4 @@
-package common.utilities;
+package utilities;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;

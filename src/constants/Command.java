@@ -1,4 +1,4 @@
-package common.constants;
+package constants;
 
 public class Command {
     public static final String SCAN = "scan";
