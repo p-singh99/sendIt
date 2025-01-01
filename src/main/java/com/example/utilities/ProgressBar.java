@@ -22,7 +22,7 @@ public class ProgressBar {
         int percent = (int) (((float) currentData / length) * 100);
         String progressBar = "\r" + message + ":  " + percent + "% | " + String.valueOf(complete).repeat(charCount)
                 + String.valueOf(incomplete).repeat(size - charCount)
-                + " | (" + (currentData / 1000) + " KB /" + (length / 1000) + " KB)";
+                + " | (" + (currentData / 1000) + " KB /" + " " +(length / 1000) + " KB)";
 
         System.out.print(progressBar);
     }

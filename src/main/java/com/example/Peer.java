@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Peer {
     static int PORT = 8080;
-    static int BUFFER_SIZE = 4096;
+    static int BUFFER_SIZE = 8192;
     private final AtomicBoolean listening;
     private final PeerDiscovery peerDiscovery;
 
@@ -27,7 +27,7 @@ public class Peer {
         new Thread(() -> {
             try {
                 ServerSocket serverSocket = new ServerSocket(PORT);
-                serverSocket.setSoTimeout(500);
+                serverSocket.setSoTimeout(100);
 
                 System.out.println("main.java.Peer listening at port: " + PORT);
                 while (this.listening.get()) {
@@ -77,7 +77,7 @@ public class Peer {
                     if (peerResponse.equals(PeerRequest.OK)) {
                         int bytesRead;
                         int totalBytes = 0;
-                        ProgressBar pb = new ProgressBar(file, 50, f.length());
+                        ProgressBar pb = new ProgressBar(f.getName(), 50, f.length());
                         while ((bytesRead = bis.read(fileData, 0, BUFFER_SIZE)) != -1) {
                             os.write(fileData, 0, bytesRead);
                             totalBytes += bytesRead;
