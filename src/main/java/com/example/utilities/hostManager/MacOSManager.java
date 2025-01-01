@@ -1,4 +1,4 @@
-package utilities.hostManager;
+package main.java.com.example.utilities.hostManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;

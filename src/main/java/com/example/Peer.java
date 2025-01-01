@@ -1,33 +1,41 @@
-import constants.PeerRequest;
+package main.java.com.example;
+
+import main.java.com.example.constants.PeerRequest;
+import main.java.com.example.utilities.ProgressBar;
 
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Peer {
     static int PORT = 8080;
     static int BUFFER_SIZE = 4096;
-
-    private PeerDiscovery peerDiscovery;
+    private final AtomicBoolean listening;
+    private final PeerDiscovery peerDiscovery;
 
     public Peer() {
         this.peerDiscovery = new PeerDiscovery(PORT);
+        this.listening = new AtomicBoolean(true);
+
+        this.listen();
     }
 
     /*
     * Start listening for incoming connections
     * */
-    public void start() {
+    public void listen() {
         new Thread(() -> {
-            System.out.println("Peer listening at port: " + PORT);
             try {
                 ServerSocket serverSocket = new ServerSocket(PORT);
-                while (true) {
+                serverSocket.setSoTimeout(500);
+
+                System.out.println("main.java.Peer listening at port: " + PORT);
+                while (this.listening.get()) {
                     try {
                         Socket soc = serverSocket.accept();
-                        System.out.println("Starting Peer Handler");
                         new Thread(new PeerHandler(soc)).start();
                     } catch (Exception e) {
-
+                        System.err.println("Exception occurred connecting with Peer: " + e);
                     }
                 }
             } catch (IOException e) {
@@ -70,8 +78,12 @@ public class Peer {
 
                     if (peerResponse.equals(PeerRequest.OK)) {
                         int bytesRead;
+                        int totalBytes = 0;
+                        ProgressBar pb = new ProgressBar(file, 100, f.length());
                         while ((bytesRead = bis.read(fileData, 0, BUFFER_SIZE)) != -1) {
                             os.write(fileData, 0, bytesRead);
+                            totalBytes += bytesRead;
+                            pb.update(totalBytes);
                         }
                         os.flush();
 
@@ -96,5 +108,9 @@ public class Peer {
 
     public void scanPeers() {
         peerDiscovery.scanPeers();
+    }
+
+    public void stopListening() {
+        this.listening.set(false);
     }
 }

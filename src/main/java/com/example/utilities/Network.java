@@ -1,4 +1,4 @@
-package utilities;
+package main.java.com.example.utilities;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;

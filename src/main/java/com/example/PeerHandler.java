@@ -1,6 +1,8 @@
-import constants.PeerRequest;
-import utilities.hostManager.HostManager;
-import utilities.hostManager.HostManagerFactory;
+package main.java.com.example;
+
+import main.java.com.example.constants.PeerRequest;
+import main.java.com.example.utilities.hostManager.HostManager;
+import main.java.com.example.utilities.hostManager.HostManagerFactory;
 
 import java.io.*;
 import java.net.Socket;

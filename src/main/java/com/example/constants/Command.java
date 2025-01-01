@@ -1,4 +1,4 @@
-package constants;
+package main.java.com.example.constants;
 
 public class Command {
     public static final String SCAN = "scan";

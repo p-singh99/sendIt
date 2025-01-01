@@ -1,4 +1,4 @@
-package constants;
+package main.java.com.example.constants;
 
 public class PeerRequest {
     public static final String HELLO = "Hello";

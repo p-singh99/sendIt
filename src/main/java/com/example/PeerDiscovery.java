@@ -1,5 +1,7 @@
-import constants.PeerRequest;
-import utilities.Network;
+package main.java.com.example;
+
+import main.java.com.example.constants.PeerRequest;
+import main.java.com.example.utilities.Network;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,7 +21,7 @@ public class PeerDiscovery {
     }
 
     /*
-     * Peer discovery, scan all WiFi IPs
+     * main.java.Peer discovery, scan all WiFi IPs
      * */
     public void scanPeers() {
         System.out.println("Scanning available devices ...");
