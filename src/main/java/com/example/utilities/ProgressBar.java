@@ -20,9 +20,9 @@ public class ProgressBar {
     public void update(long currentData) {
         int charCount = (int) ((float) currentData * this.multiplyFactor);
         int percent = (int) (((float) currentData / length) * 100);
-        String progressBar = "\r" + message + " " + percent + "% | " + String.valueOf(complete).repeat(charCount)
+        String progressBar = "\r" + message + ":  " + percent + "% | " + String.valueOf(complete).repeat(charCount)
                 + String.valueOf(incomplete).repeat(size - charCount)
-                + " | " + currentData + "/" + length;
+                + " | (" + (currentData / 1000) + " KB /" + (length / 1000) + " KB)";
 
         System.out.print(progressBar);
     }

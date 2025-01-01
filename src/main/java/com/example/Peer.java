@@ -35,7 +35,7 @@ public class Peer {
                         Socket soc = serverSocket.accept();
                         new Thread(new PeerHandler(soc)).start();
                     } catch (Exception e) {
-                        System.err.println("Exception occurred connecting with Peer: " + e);
+                        continue;
                     }
                 }
             } catch (IOException e) {
@@ -45,7 +45,6 @@ public class Peer {
     }
 
     public void sendFile(String file, String peer) {
-        System.out.println("File is: " + file);
 
         // Open the file for reading
         File f;
@@ -59,7 +58,6 @@ public class Peer {
             f = new File(file);
             fileData = new byte[BUFFER_SIZE];
 
-            System.out.println("File length is: " + f.length());
             fis = new FileInputStream(f);
             bis = new BufferedInputStream(fis);
 
@@ -79,12 +77,13 @@ public class Peer {
                     if (peerResponse.equals(PeerRequest.OK)) {
                         int bytesRead;
                         int totalBytes = 0;
-                        ProgressBar pb = new ProgressBar(file, 100, f.length());
+                        ProgressBar pb = new ProgressBar(file, 50, f.length());
                         while ((bytesRead = bis.read(fileData, 0, BUFFER_SIZE)) != -1) {
                             os.write(fileData, 0, bytesRead);
                             totalBytes += bytesRead;
                             pb.update(totalBytes);
                         }
+                        System.out.println();
                         os.flush();
 
                         peerResponse = reader.readLine();
