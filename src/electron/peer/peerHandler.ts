@@ -10,14 +10,13 @@ export const peerHandler = (soc: Socket) => {
         
         switch(message) {
             case PeerComms.HELLO: {
-                soc.write(PeerComms.HELLO);
                  
                 const device: Device = {
                     ip: ip()!,
                     name: hostname(),
                     type: 'device'
                 }
-                soc.write(JSON.stringify(device));
+                soc.write(PeerComms.HELLO + ' ' + JSON.stringify(device));
                 break;
             }
         }
