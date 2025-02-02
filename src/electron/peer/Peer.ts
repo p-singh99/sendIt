@@ -12,8 +12,9 @@ export default class Peer {
      * Start listening for incoming connections
      */
     listen = (): void => {
+        console.log('Server is listening ...');
         const server = net.createServer()
-        .listen(this.port, '127.0.0.1')
+        .listen(this.port)
         .on('connection', socket => peerHandler(socket));
     }
 }
