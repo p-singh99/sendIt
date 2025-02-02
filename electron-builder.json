@@ -1,0 +1,15 @@
+{
+    "appId": "com.pawanjot.sendIt",
+    "files": ["dist-electron", "dist-react"],
+    "icon": "./sendIt.png",
+    "mac": {
+        "target": "dmg"
+    },
+    "linux": {
+        "target": "AppImage",
+        "category": "Utility"
+    },
+    "win": {
+        "target": ["portable", "msi"]
+    }
+}
