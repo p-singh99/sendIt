@@ -3,6 +3,7 @@ import Device from '../types/Device.js';
 import { getSubnet } from '../utils.js';
 import net from 'net';
 import { PeerComms } from '../constants/PeerComms.js';
+import { AppSettings } from '../constants/AppSettings.js';
 
 export async function scan(): Promise<Device[]> {
     console.log('Scanning available devices ...');
@@ -14,7 +15,7 @@ export async function scan(): Promise<Device[]> {
     if (ip !== undefined) {
         const subnet = getSubnet(localIP!);
 
-        for (let i = 0; i < 255; i++) {
+        for (let i = 0; i < 101; i++) {
             const host = subnet + "." + i;
             
             if (host !== localIP) {
@@ -37,13 +38,23 @@ export async function scan(): Promise<Device[]> {
 function isReachable(peer: string): Promise<Device> {
     return new Promise<Device>((resolve, reject) => {
         const socket = new net.Socket();
-        socket.connect(5140, peer, () => {
+        socket.setTimeout(500);
+
+        socket.connect(6000, peer, () => {
             socket.write(PeerComms.HELLO);
         });
 
+        socket.on('timeout', () => {
+            console.log('Connection Timed out for ' + peer);
+            reject(new Error('Unable to reach peer @ ' + peer));
+        })
+
         socket.on('data', (response) => {
             console.log('Received response from host: ' + response);
-            const deviceResponse: Device = JSON.parse(response.toString());
+
+            const deviceInfo = response.toString().split(AppSettings.DELIMITER_STRING)[1];
+            console.log(response.toString().split(' ')[1]);
+            const deviceResponse: Device = JSON.parse(deviceInfo);
            
             resolve(deviceResponse);
         });

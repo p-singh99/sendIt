@@ -3,6 +3,7 @@ import { PeerComms } from "../constants/PeerComms.js";
 import Device from "../types/Device.js";
 import { ip } from "address";
 import { hostname } from 'os';
+import { AppSettings } from "../constants/AppSettings.js";
 
 export const peerHandler = (soc: Socket) => {
     soc.on('data', (data) => {
@@ -16,7 +17,7 @@ export const peerHandler = (soc: Socket) => {
                     name: hostname(),
                     type: 'device'
                 }
-                soc.write(PeerComms.HELLO + ' ' + JSON.stringify(device));
+                soc.write(PeerComms.HELLO + AppSettings.DELIMITER_STRING + JSON.stringify(device));
                 break;
             }
         }
